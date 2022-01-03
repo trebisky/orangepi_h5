@@ -18,6 +18,7 @@ If you want to follow my work in order, take them like this.
 1. hello_asm - hello world written entirely in assembly.
 2. hello - hello world written in C
 3. no_atf - U-Boot without ATF and secure mode
+4. inter - try to generate interrupts
 
 My work with the h5 has been frustrating.
 I have been unable to get interrupts to work.

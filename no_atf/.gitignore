@@ -1,0 +1,8 @@
+zzz
+zzz/*
+*.bin
+*.img
+*.dump
+*.o
+mksunxiboot
+mkimage_src
