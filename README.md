@@ -24,3 +24,5 @@ My work with the h5 has been frustrating.
 I have been unable to get interrupts to work.
 This probably has to do with setting up clocks, but I suppose
 there is some chance that the ATF secure/insecure mode stuff plays a part.
+
+A lot of that h5 interrupt work has been done within my Kyu project.
