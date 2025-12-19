@@ -8,7 +8,7 @@ CROSS_COMPILE = aarch64-linux-gnu-
 
 # -------------------------------------
 
-OBJS = start.o inter.o gpio.o uart.o
+OBJS = start.o main.o gic.o timer.o gpio.o uart.o
 
 TARGET = $(BOARD).bin
 
@@ -26,7 +26,8 @@ LDFLAGS		:=	-Bstatic \
 			-Wl,--start-group \
 			-Wl,--end-group \
 			-Wl,--build-id=none \
-			-nostdlib
+			-nostdlib \
+			-Wl,--no-warn-rwx-segments
 
 CC			=	$(CROSS_COMPILE)gcc $(CFLAGS)
 LD 			=	$(CROSS_COMPILE)gcc $(LDFLAGS)

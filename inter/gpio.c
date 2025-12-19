@@ -215,12 +215,48 @@ delay_x ( void )
 	    ;
 }
 
+void
+blink ( void )
+{
+	led_init ();
+
+	for ( ;; ) {
+	    //led_off ();
+	    status_on ();
+
+	    // uart_puts("OFF\n");
+
+	    delay_x ();
+
+	    // led_on ();
+	    status_off ();
+
+	    delay_x ();
+	}
+}
+
+static int l_status = 0;
+
+/* Called on timer interrupt */
+void
+led_toggle ( void )
+{
+    if ( l_status ) {
+        l_status = 0;
+        status_off ();
+    } else {
+        l_status = 1;
+        status_on ();
+    }
+}
+
+
 /* For some reason, only the red LED is blinking
  * The red LED is the status LED.
  * The other LED (on Port L) does not respond.
  */
 void
-blink ( void )
+blink_OLD ( void )
 {
 	led_init ();
 	hack_init ( GPIO_L );

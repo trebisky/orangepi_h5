@@ -1,12 +1,18 @@
 
-h5_no_atf
+The "no-atf" project
 
-This little project accomplishes two purposes.  One is that it examines in detail the h5 boot process.
-The other is that it eliminates the ATF part of that process (the "ARM trusted firmware" component).
+This is really a silly and pointless exercise, but I didn't know that back in 2018 when I
+was first working with 64 bit ARM and didn't really understand what ATF was all about.
+
+This little project had two goals.  One is to examine in detail the h5 boot process.
+The other is to eliminate the ATF part of that process (the "ARM trusted firmware" component).
 The ATF component (otherwise known as bl31.bin) switches from EL3 to EL2, and it also places the
-processor in NS (non-secure) mode, which is a sort of "sanboxed" mode.  For me, this is just a
-nuisance since I am developing my own RTOS (the Kyu Project), not running linux.
-If you want to run linux, you can use the standard setup which includes ATF.
+processor in NS (non-secure) mode, which is a sort of "sanboxed" mode.
+
+At the time I wrote this, I didn't understand what secure mode was all about
+(and I still don't) and thought that hving to run non-secure was limiting me.
+I now know this is not true, but I had fun and learned some things (maybe)
+monkeying with all of this.
 
 My aim here is to start with various binary files and reproduce the packaging and place the
 result on a bootable SD card which can be placed into an Orange Pi PC2 board (with H5 chip)

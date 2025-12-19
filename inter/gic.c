@@ -18,8 +18,11 @@
  * It has two sections, "cpu" and "dist"
  */
 
-#include "arch/types.h"
-#include "fire3_ints.h"
+// #include "arch/types.h"
+// #include "fire3_ints.h"
+
+typedef unsigned int u32;
+typedef volatile unsigned int vu32;
 
 /* The GIC-400 is GIC version 2.0
  */
@@ -108,8 +111,16 @@ struct gic400_cpu {
 	vu32 dir;			/* 0x1000 */
 };
 
+#ifdef notdef
+/* Fire3 addresses */
 #define GIC_DIST_BASE	((struct gic400_dist *) 0xc0009000)
 #define GIC_CPU_BASE	((struct gic400_cpu *) 0xc000a000)
+#endif
+
+/* Allwinner H5 addresses */
+/* Base addresses are p. 80 of TRM, section 4.1 */
+#define GIC_DIST_BASE   ((struct gic400_dist *) 0x01c81000)
+#define GIC_CPU_BASE    ((struct gic400_cpu *) 0x01c82000)
 
 #define	G0_ENABLE	0x01
 #define	G1_ENABLE	0x02
@@ -277,6 +288,7 @@ gic_test ( void )
 	int i;
 
 	/*
+	 * We ain't got no printf
 	printf ( "GIC sgi at = %08x\n", &gp->sgi );
 	printf ( "GIC t0 at = %08x\n", &gp->target[0] );
 	printf ( "GIC s0 at = %08x\n", &gp->spi_stat[0] );
