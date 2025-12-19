@@ -97,7 +97,6 @@ show_hex ( int n )
 		uart_puts ( buf );
 }
 
-#ifdef notdef
 static void
 show_val ( char *msg, int val )
 {
@@ -105,7 +104,6 @@ show_val ( char *msg, int val )
 		show_hex ( val );
 		uart_puts ( "\n" );
 }
-#endif
 
 /* Here is the magic trick I learned from the RK3328
  */
@@ -174,8 +172,9 @@ main ( void )
 	// mk_fault ();
 
 	// works (with el2_fixup())- 12-18-2025
-	// uart_puts ( "Try a soft (SGI) interrupt\n" );
-	// gic_soft_self ( SGI_TEST );
+	uart_puts ( "Try a soft (SGI) interrupt\n" );
+	uart_puts ( " should yield IRQ 2\n" );
+	gic_soft_self ( SGI_TEST );
 
 	// uart_puts(" .. Blinking\n");
 	// blink ();
@@ -270,7 +269,10 @@ void irq_handler ( void )
 		// 		uart_puts ( "1000th Timer 0 interrupt\n" );
 		tcount++;
 		timer_handler ();
+	} else {
+		show_val ( "Unexpected interrupt, IRQ = ", irq );
 	}
+
 
 	intcon_irqack ( irq );
 }
@@ -317,6 +319,11 @@ sync_handler ( unsigned exc, unsigned esr, unsigned long *regs )
         irq_handler ();
         return;
 	}
+
+	uart_puts ( "Synch exception, not interrupt\n" );
+	show_val ( "Sync exc: ", exc );
+	show_val ( "Sync esr: ", esr );
+	show_val ( "Sync class: ", class );
 
 	fault_handler ( exc );
 
