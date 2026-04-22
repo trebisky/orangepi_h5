@@ -4,6 +4,10 @@
  * This can write to the UART and also blink the LED.
  * Tom Trebisky  12-22-2016 7-17-2020
  *
+ * Revisited 1-2026 to get interrupts working.
+ * Revisited again 4-2026 to make the "power" LED work.
+ *
+ * ----------------------------------------------------
  * Here is a play by play as experimenting procedes.
  *
  * 0 - the "power" LED does not respond or blink.
@@ -56,6 +60,9 @@
 void int_init ( void );
 void mk_fault ( void );
 
+/* The mask of "3" selects both the I and F bits
+ * setting a bit "masks" or disables the interrupt
+ */
 #define INT_unlock      asm volatile("msr DAIFClr, #3" : : : "cc")
 #define INT_lock        asm volatile("msr DAIFSet, #3" : : : "cc")
 
@@ -173,11 +180,8 @@ main ( void )
 
 	// works (with el2_fixup())- 12-18-2025
 	uart_puts ( "Try a soft (SGI) interrupt\n" );
-	uart_puts ( " should yield IRQ 2\n" );
+	uart_puts ( " should yield IRQ 2 (as unexpected interrupt)\n" );
 	gic_soft_self ( SGI_TEST );
-
-	// uart_puts(" .. Blinking\n");
-	// blink ();
 
 	uart_puts(" .. Spinning\n");
 	uart_puts(" .. Should be blinking\n");
@@ -188,6 +192,7 @@ main ( void )
 	    ;
 #endif
 
+	/* A better way to spin */
 	for ( ;; ) {
 		asm volatile ( "wfe" );
 	}
@@ -273,7 +278,6 @@ void irq_handler ( void )
 		show_val ( "Unexpected interrupt, IRQ = ", irq );
 	}
 
-
 	intcon_irqack ( irq );
 }
 
@@ -351,6 +355,5 @@ sync_handler ( unsigned exc, unsigned esr, unsigned long *regs )
     boardReset();
 #endif
 }
-
 
 /* THE END */

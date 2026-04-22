@@ -16,7 +16,11 @@ void gpio_pull ( int, int, int );
 #define GPIO_G    6
 #define GPIO_H    7
 #define GPIO_I    8
+
+#define GPIO_J    9
+#ifdef CHIP_H3
 #define GPIO_L    9	/* R_PIO */
+#endif
 
 typedef volatile unsigned int vu32;
 typedef unsigned int u32;
@@ -44,7 +48,8 @@ static struct h3_gpio * gpio_base[] = {
     (struct h3_gpio *) 0x01C208FC,		/* GPIO_H */
     (struct h3_gpio *) 0x01C20920,		/* GPIO_I */
 
-    (struct h3_gpio *) 0x01F02c00,		/* GPIO_L */
+    (struct h3_gpio *) 0x01F02c00,		/* GPIO_J (was "L" on h3) */
+
 };
 
 /* Only A, G, and R can interrupt */
@@ -131,22 +136,23 @@ uart_gpio_init ( void )
 }
 
 
-/* A15 on PC, A20 on PC2 */
+/* Status is RED */
+/* A15 on PC (h3), A20 on PC2 (h5) */
 /* So this is correct and works with the H5 based PC2 */
 
 #define STATUS_PIN	20
 // #define STATUS_PIN	15
 
-/* L10 is the same pin on PC and PC2 */
-/* no luck so far making this blink on the PC2 */
-/* I have tried this on two separate boards, no luck */
-/* This light does come on briefly when linux boots */
+/* Now the so called "power" LED which is GREEN */
+/* It is L10 on the h3 boards (Orange Pi PC) */
+/* It is J10 on the h5 board (Orange Pi PC2) */
+
 #define PWR_PIN		10
 
 void
 led_init ( void )
 {
-	gpio_config ( GPIO_L, PWR_PIN, GPIO_OUTPUT );
+	gpio_config ( GPIO_J, PWR_PIN, GPIO_OUTPUT );
 	gpio_config ( GPIO_A, STATUS_PIN, GPIO_OUTPUT );
 }
 
@@ -179,16 +185,20 @@ hack_off ( int gpio )
 	gp->data = 0x0;
 }
 
+/* This is the green LED */
+
+// led_on ( void )
 void
-led_on ( void )
+power_on ( void )
 {
-	gpio_output ( GPIO_L, PWR_PIN, 1 );
+	gpio_output ( GPIO_J, PWR_PIN, 1 );
 }
 
+// led_off ( void )
 void
-led_off ( void )
+power_off ( void )
 {
-	gpio_output ( GPIO_L, PWR_PIN, 0 );
+	gpio_output ( GPIO_J, PWR_PIN, 0 );
 }
 
 /* This is the red LED, it works fine */
@@ -215,6 +225,7 @@ delay_x ( void )
 	    ;
 }
 
+/* Non-interrupt driven blinker */
 void
 blink ( void )
 {
@@ -244,9 +255,11 @@ led_toggle ( void )
     if ( l_status ) {
         l_status = 0;
         status_off ();
+		power_on ();
     } else {
         l_status = 1;
         status_on ();
+		power_off ();
     }
 }
 
@@ -259,12 +272,12 @@ void
 blink_OLD ( void )
 {
 	led_init ();
-	hack_init ( GPIO_L );
+	hack_init ( GPIO_J );
 	// hack_init ( GPIO_A );
 
 	for ( ;; ) {
 	    //led_off ();
-	    hack_off ( GPIO_L );
+	    hack_off ( GPIO_J );
 
 	    // hack_off ( GPIO_A );
 	    status_on ();
@@ -273,7 +286,7 @@ blink_OLD ( void )
 	    delay_x ();
 
 	    // led_on ();
-	    hack_on ( GPIO_L );
+	    hack_on ( GPIO_J );
 
 	    // hack_on ( GPIO_A );
 	    status_off ();

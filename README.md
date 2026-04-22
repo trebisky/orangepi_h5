@@ -1,14 +1,17 @@
 This is a collection of programs I have been writing to run on
 the Orange Pi PC 2 board with the Allwinner h5 chip.
 
-11-2018, 12-2025
+I also have an Allwinner H5 on a couple of Nanopi Neo Plus2
+boards, but have yet to do anything with those boards.
+
+11-2018, 12-2025, 4-2026
 
 The H5 has a 4 core A53 (64 bit armv8) inside.
 
 Amazingly the peripherals wrapped around the CPU cluster in the h5
 are essentially identical to those in the h3 chip.
 
-They are what you might call "bare-metal"
+These little projects are what you might call "bare-metal"
 programming, although they get loaded by U-Boot.
 
 For lots of notes and supporting information, see my website:

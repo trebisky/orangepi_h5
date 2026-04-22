@@ -1,3 +1,9 @@
+*** OLD history, circa 2020.
+This has all been sorted out and was
+nothing as esoteric as these notes suggest,
+the issue was just that they moved the LED to
+a different GPIO pin.
+
 These are some notes as I research how to get the R_GPIO and
 the interrupts to work on the OrangePi H5 board.
 
